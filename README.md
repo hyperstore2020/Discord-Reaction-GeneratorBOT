@@ -5,6 +5,7 @@ A discord - reaction based generator bot, which takes a random line from a file 
 - You can download this directly from the command line using the following command: 
 - "git clone https://github.com/4-04/Discord-Reaction-GeneratorBOT/"
 - Once downloaded, edit the config.json file, and run the 'main.py' file.
+- Alternatively you can download theese files manually by clicking the "download now" button on Github.
 
 # How to use
 - This bot is very simple to set up and use.
