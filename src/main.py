@@ -125,9 +125,10 @@ async def stock(ctx, folder_name, file_name=None):
         title=f"{name} - Stock Command - Stock of {folder_name}." ,
         color = color
     )
+    folder_name = "gen_"+folder_name
     if file_name == None:
         for f in os.listdir(folder_name):
-            embed.add_field(name=f"{f.replace('.txt', '')}", value=str(int(sum(1 for line in open(f"{folder_name}/{f}")))-2)+"x", inline=False)
+            embed.add_field(name=f"{f.replace('.txt', '')}", value=str(int(sum(1 for line in open(f"{folder_name}/{f}")))-2)+"x"+" lines.", inline=False)
     else:
         if not file_name.endswith(".txt"):
             file_name = file_name+".txt"
