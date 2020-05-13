@@ -16,8 +16,8 @@ if os.path.isfile("config.json"):
             token = data["token"]
             prefix = data["prefix"]
             name = data["name"]
-            cooldown = data["cooldown"].lower()
             color = data['hex_color']
+            color = color.replace("#", "")
             if color.startswith("0x"):
                 color = int(color, 16)
             else:
@@ -37,6 +37,7 @@ active_dictionary = {}
 
 where_dictionary = {}
 
+
 error_color = 0xfc1703
     
 #creating the  bot object
@@ -54,9 +55,10 @@ async def on_ready():
 @commands.has_permissions(administrator=True)
 async def start(ctx, gen_type : str):
     global file_dictionary, file_cooldown_dictionary, active_dictionary, where_dictionary
-    if gen_type.startswith("gen_"):
-        folder_name = gen_type.replace("gen_", "")
+    if gen_type:
+        folder_name = "gen_"+str(gen_type)
         files = os.listdir(f"{folder_name}/")
+        reactions_to_add = []
         
         if files:
             embed = discord.Embed(title=f"{name} - {gen_type}")
@@ -64,22 +66,29 @@ async def start(ctx, gen_type : str):
             for f in files:
                 if f.endswith(".txt"):
                     file_name = f.replace(".txt", "")
-                    lines = open(f"{folder_name}/{f}").read().spltilines()
+                    lines = open(f"{folder_name}\\{f}", encoding="utf8").read().splitlines()
                     
-                    emoji_id = lines[0]
-                    cooldown = lines[1]
-                    where_dictionary[f] = folder_name
+                    emoji_id = str(lines[0])
+                    cooldown = int(lines[1])
+                    where_dictionary[file_name] = folder_name
+                    
+                    
+                    reactions_to_add.append(emoji_id)
                     
                     file_dictionary[emoji_id] = file_name 
                     file_cooldown_dictionary[file_name] = cooldown
-                    active_dictionary[int(ctx.channel.id)] = True
                     
                     embed.add_field(name=file_name, value=f"React with {emoji_id} to get sent a **{file_name}!** *[Cooldown: {cooldown} seconds]*", inline=False)
-                    if f+".json" not in json_dir:
-                        with open(f"data\\{f}.json", "w+") as f:
+                    if file_name+".json" not in json_dir:
+                        with open(f"data\\{file_name}.json", "w+") as f:
                             f.write(r"{}")
         
-            await ctx.channel.send(embed=embed)
+            msg = await ctx.channel.send(embed=embed)
+            for emoji in reactions_to_add:
+                await msg.add_reaction(emoji)
+                
+            active_dictionary[msg.id] = True
+        
             
 @client.command()
 @commands.has_permissions(administrator=True)
@@ -130,11 +139,14 @@ async def on_reaction_add(reaction, user):
         return
     if not reaction.message.id in active_dictionary:
         return
+    else:
+        if active_dictionary[reaction.message.id] == False:
+            return
 
     await reaction.remove(user)
-    reaction_name = file_dictionary[reaction]
+    reaction_name = file_dictionary[str(reaction)]
     cooldown = file_cooldown_dictionary[reaction_name]
-    where = "gen_"+where_dictionary[reaction_name]
+    where = where_dictionary[reaction_name]
     
     with open(f"data\\{reaction_name}.json") as f:
         last_uses = json.load(f)
@@ -169,7 +181,7 @@ async def on_reaction_add(reaction, user):
         time_now = (datetime.datetime.now() - past_date).total_seconds()
         diff = time_now - last_used
         if int(diff) >= cooldown:
-            fil = open(f"normal_gen/{reaction_name}.txt").read().splitlines()
+            fil = open(f"{where}/{reaction_name}.txt").read().splitlines()
             fil.pop(0)
             fil.pop(1)
             line = random.choice(fil)
