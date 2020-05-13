@@ -43,7 +43,7 @@ error_color = 0xfc1703
 #creating the  bot object
 
 client = commands.Bot(command_prefix=prefix)
-
+client.remove_command("help")
 @client.event
 async def on_ready():
     print("Bot is now running.\n")
