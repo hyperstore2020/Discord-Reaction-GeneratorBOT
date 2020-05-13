@@ -49,6 +49,12 @@ async def on_ready():
     print("Bot is now running.\n")
     print(f"[{prefix}help for a list of commands]")
     
+@client.command()
+async def help(ctx):
+    embed = discord.Embed(title=f"{name} - help command")
+    embed.add_field(name="Start", value=f"{prefix}start (gen type) - Will load the gen, requires administrator.")
+    embed.add_field(name="Stock", value=f"{prefix}stock (type) (file, optional) - Will show the available stock from that type, alternatively from that specific file (optional)")
+    embed.add_field(name="restock", value=f"{prefix}restock (folder name) (lines, seperated by a comma) - Will append all the lines to that file in that folder, requires administraotr.")
     
 #load the bot
 @client.command()
@@ -92,12 +98,12 @@ async def start(ctx, gen_type : str):
             
 @client.command()
 @commands.has_permissions(administrator=True)
-async def restock(ctx, types, lines=None):
+async def restock(ctx, f, types, lines=None):
     types = types.lower()
     msg = str(ctx.message.content).replace(f'{prefix}restock', '').replace(types, '').strip()
     accs = msg.split(',')
     try:
-        with open(types+".txt", "a") as f:
+        with open(f+"/"+types+".txt", "a") as f:
             for line in accs:
                 f.write(line+"\n")
         embed = discord.Embed(title="Success", description=f"Successfully added a total of +{len(accs)} lines to {types}!", color=color)
