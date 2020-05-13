@@ -51,10 +51,12 @@ async def on_ready():
     
 @client.command()
 async def help(ctx):
-    embed = discord.Embed(title=f"{name} - help command")
+    embed = discord.Embed(title=f"{name} - help command", color=color)
     embed.add_field(name="Start", value=f"{prefix}start (gen type) - Will load the gen, requires administrator.")
     embed.add_field(name="Stock", value=f"{prefix}stock (type) (file, optional) - Will show the available stock from that type, alternatively from that specific file (optional)")
     embed.add_field(name="restock", value=f"{prefix}restock (folder name) (lines, seperated by a comma) - Will append all the lines to that file in that folder, requires administraotr.")
+    
+    await ctx.channel.send(embed=embed)
     
 #load the bot
 @client.command()
