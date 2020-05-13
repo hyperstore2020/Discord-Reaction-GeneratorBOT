@@ -51,7 +51,7 @@ async def on_ready():
     
 @client.command()
 async def help(ctx):
-    embed = discord.Embed(title=f"{name} - help command", color=color)
+    embed = discord.Embed(title=f"{name} - help command")
     embed.add_field(name="Start", value=f"{prefix}start (gen type) - Will load the gen, requires administrator.")
     embed.add_field(name="Stock", value=f"{prefix}stock (type) (file, optional) - Will show the available stock from that type, alternatively from that specific file (optional)")
     embed.add_field(name="restock", value=f"{prefix}restock (folder name) (lines, seperated by a comma) - Will append all the lines to that file in that folder, requires administraotr.")
@@ -100,22 +100,24 @@ async def start(ctx, gen_type : str):
             
 @client.command()
 @commands.has_permissions(administrator=True)
-async def restock(ctx, f, types, lines=None):
+async def restock(ctx, fo, types, *, lines=None):
     types = types.lower()
-    msg = str(ctx.message.content).replace(f'{prefix}restock', '').replace(types, '').strip()
+    msg = str(ctx.message.content).replace(f'{prefix}restock', '').replace(types, '').replace(fo, '').strip()
     accs = msg.split(',')
     try:
-        with open(f+"/"+types+".txt", "a") as f:
+        fo = "gen_"+fo+"/"
+        with open(fo+types+".txt", "a") as f:
             for line in accs:
                 f.write(line+"\n")
-        embed = discord.Embed(title="Success", description=f"Successfully added a total of +{len(accs)} lines to {types}!", color=color)
+        embed = discord.Embed(title="Success", description=f"Successfully added a total of +{len(accs)} lines to {types}.txt!", color=color)
         await ctx.send(embed=embed)
         return
     except FileNotFoundError:
         embed = discord.Embed(title="Error", description=f"Invalid type '{types}'! You may try again with a different type.", color=error_color)
         await ctx.send(embed=embed)
         return 
-    except Exception:
+    except Exception as e:
+        print(f"({e})")
         embed = discord.Embed(title="Error", description="An eror has accured. You may try agian.", color=error_color)
         await ctx.send(embed=embed)
         return
