@@ -46,6 +46,14 @@ client = commands.Bot(command_prefix=prefix)
 client.remove_command("help")
 
 
+@client.event
+async def on_ready():
+    print("-" * 30)
+    print(f"[Started BOT at {datetime.datetime.utcnow()}]\n")
+    print("[The Bot is now online]")
+    print(f"[{prefix}help for a list of commands]")
+    print("-" * 30)
+
 
     
 @client.command()
@@ -239,7 +247,7 @@ async def on_command_error(ctx, error):
         embed = discord.Embed(
             title="Error",
             color=error_color,
-            description=f"Error! You do not have permissions to run this command!"
+            description="Error! You do not have permissions to run this command!"
         )
         await ctx.send(embed=embed)
     else:
@@ -250,10 +258,5 @@ async def on_command_error(ctx, error):
 #attempting to run the bot
 try:
     client.run(token)
-    print("-" * 30)
-    print(f"[Started BOT at {datetime.datetime.utcnow()}]\n")
-    print("[The Bot is now online]")
-    print(f"[{prefix}help for a list of commands]")
-    print("-" * 30)
 except:
     print("The token (in the config.json file) is invalid! You may try again with a different token.")
