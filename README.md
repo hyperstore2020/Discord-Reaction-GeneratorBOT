@@ -14,10 +14,10 @@ A discord - reaction based generator bot, which takes a random line from a file 
 that starts with "gen_", for example: "gen_premium", now the bot will automatically enable the command (prefix)start premium. And all the files inside that folder will be automatically be recognized for the bot as valid files. 
 
 # Important
-- Each line in the files inside the gen_(whatever) folders can contain whatever lines you would want too, EXCEPT for the line number 1 and 2. In the line number 1 it has to be the emoji id of the reaction type for that file. For instance a file name movies1.txt, inside the folder gen_movies, would have the first line as the emoji id you want to have for someone to react on that message. The bot will automatically exclude the first two lines when sending a random line to the user. (you can get the emojis on Discord by typing \ before sending the emoji in chat)
-- The second line has to be the cooldown for that gen, if you want no cooldown simply set that line to 0.
-- So inside movies1.txt it would look something like this:
- "line1 : <@emoji_id_for_this_file> (an emoji ID looks something like this <@3103013910921>
-  line2 : 30 (cooldown is now 30 seconds)
-"""
+- Each line in the files inside the gen_(whatever) folders can contain whatever lines you would want to, EXCEPT for the line number 1 and 2. 
+- The line number 1 in the file has to be the emoji ID, that you wish to use for that file. 
+- The second line has to be the cooldown in seconds for that specific file, if you want no cooldown simply set that line to 0.
+- The bot will automatically exclude the first two lines when sending a random line to the user. 
+- (you can get the emojis on Discord by typing \ before sending the emoji in chat) (an emoji ID looks something like this <:test_emoji:710171225267372144>)
+
 - If you fail to meet theese requirements the bot may raise an  error
