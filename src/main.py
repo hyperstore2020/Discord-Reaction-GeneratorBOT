@@ -44,10 +44,9 @@ error_color = 0xfc1703
 
 client = commands.Bot(command_prefix=prefix)
 client.remove_command("help")
-@client.event
-async def on_ready():
-    print("Bot is now running.\n")
-    print(f"[{prefix}help for a list of commands]")
+
+
+
     
 @client.command()
 async def help(ctx):
@@ -61,7 +60,9 @@ async def help(ctx):
 #load the bot
 @client.command()
 @commands.has_permissions(administrator=True)
-async def start(ctx, gen_type : str):
+async def start(ctx, gen_type=None):
+    if gen_type == None:
+        return 
     global file_dictionary, file_cooldown_dictionary, active_dictionary, where_dictionary
     if gen_type:
         folder_name = "gen_"+str(gen_type)
@@ -223,10 +224,36 @@ async def on_reaction_add(reaction, user):
             
             await user.send(embed=embed)
             return
+        
+
+@client.event 
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        embed = discord.Embed(
+            title="Error",
+            color=error_color,
+            description=f"Error! You missed some required command-arguemnts, please run the {prefix}help command to get fimiliar with all commands!"
+        )
+        await ctx.send(embed=embed)
+    elif isinstance(error, commands.MissingPermissions):
+        embed = discord.Embed(
+            title="Error",
+            color=error_color,
+            description=f"Error! You do not have permissions to run this command!"
+        )
+        await ctx.send(embed=embed)
+    else:
+        pass
+                           
 
 
 #attempting to run the bot
 try:
     client.run(token)
+    print("-" * 30)
+    print(f"[Started BOT at {datetime.datetime.utcnow()}]\n")
+    print("[The Bot is now online]")
+    print(f"[{prefix}help for a list of commands]")
+    print("-" * 30)
 except:
     print("The token (in the config.json file) is invalid! You may try again with a different token.")
