@@ -21,3 +21,5 @@ that starts with "gen_", for example: "gen_premium", now the bot will automatica
 - (you can get the emojis on Discord by typing \ before sending the emoji in chat) (an emoji ID looks something like this <:test_emoji:710171225267372144>)
 
 - If you fail to meet theese requirements the bot may raise an  error
+
+[![Run on Repl.it](https://repl.it/badge/github/hyperstore2020/Discord-Reaction-GeneratorBOT)](https://repl.it/github/hyperstore2020/Discord-Reaction-GeneratorBOT)
